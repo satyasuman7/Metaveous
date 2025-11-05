@@ -91,7 +91,7 @@ export default function TableData({ data, columns, title = "Data Table", onEdit,
                     className={`${col.key === 'blog_content' || col.key === 'description' || col.key === 'job_description' ? 'tableRow_style' : ''} ${col.key === 'blog_title' ? 'tableRow2_style' : ''}`} >
 
                     {col.isImage ? (
-                      <img src={`http://localhost:3000/uploads/${baseImagePath}${item[col.key]}`} alt="profile-img" style={{ width: '80px', height: '80px', borderRadius: '4px', objectFit: 'cover' }} />
+                      <img src={`http://localhost:3000/uploads/${baseImagePath}${item[col.key]}`} alt="profile-img" className='rounded-2' style={{ width: '80px', height: '80px', objectFit: 'cover' }} />
                     ) : col.key === 'status' ? (
                       <span className={`badge rounded-pill ${item.status ? 'bg-success' : 'bg-danger'}`}>
                         {item.status ? 'Active' : 'Inactive'}

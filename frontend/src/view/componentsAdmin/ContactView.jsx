@@ -1,29 +1,30 @@
-import React from 'react'
+import React, { useState } from 'react'
 import TableData from '../TableData'
-
-const contactData = [
-  {
-    id: 1,
-    contact_name: 'john',
-    contact_email: 'john.doe@example.com',
-    contact_mobile: '7457845741',
-    contact_message: 'I would like to know more about React.',
-    contact_datesubmitted: '2025-10-10',
-  }
-];
 
 const contactColumns = [
   { key: 'contact_name', label: 'Name' },
   { key: 'contact_email', label: 'Email Address' },
   { key: 'contact_mobile', label: 'Mobile Number' },
   { key: 'contact_message', label: 'Message' },
-  { key: 'contact_datesubmitted', label: 'Date Submitted' },
 ];
 export default function ContactView() {
+  const [contactForm, setContactForm] = useState({
+    contact_name: '',
+    contact_email: '',
+    contact_mobile: '',
+    contact_message: '',
+  });
+  const [contactList, setContactList] = useState([]);
+  const [editId, setEditId] = useState(null);
   return (
     <>
       <div className="p-3">
-        <TableData data={contactData} columns={contactColumns} title="Contact Messages" />
+        <TableData
+          data={contactList}
+          columns={contactColumns}
+          title="Contact Users"
+          onEdit={(item) => editContact(item._id)}
+        />
       </div>
     </>
   )

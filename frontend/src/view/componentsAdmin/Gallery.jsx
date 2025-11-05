@@ -101,7 +101,7 @@ export default function Gallery() {
                 {/* {editId && (
                   <div className="mt-2">
                     <p>Current Image:</p>
-                    <img src={`http://localhost:3000/gallery/${galleryList.find(i => i._id === editId)?.gallery_image}`} alt="Current" style={{ maxWidth: '150px' }} />
+                    <img src={`http://localhost:3000/gallery/${galleryList.find(i => i._id === editId)?.gallery_image}`} alt={`${galleryList.find(i => i._id === editId)?.gallery_image}`} style={{ maxWidth: '150px' }} />
                   </div>
                 )} */}
               </div>

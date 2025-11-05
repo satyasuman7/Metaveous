@@ -10,6 +10,7 @@ app.use("/", require("./routes/AdminRoutes.js"));
 app.use("/", require("./routes/GalleryRoutes.js"));
 app.use("/", require("./routes/BlogsRoutes.js"));
 app.use("/", require("./routes/CareerRoutes.js"));
+app.use("/", require("./routes/ContactRoutes.js"));
 app.use('/uploads', express.static('uploads'));
 
 

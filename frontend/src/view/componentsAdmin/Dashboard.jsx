@@ -8,22 +8,23 @@ export default function Dashboard() {
     contacts: 0,
     gallery: 0,
     careers: 0,
+    accounts: 0,
   });
 
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const [blogsRes, galleryRes, careersRes, accountsRes] = await Promise.all([
+        const [blogsRes, galleryRes, careersRes, accountsRes, contactRes] = await Promise.all([
           axios.get("http://localhost:3000/blogs"),
-        //   axios.get("http://localhost:3000/contact"),
           axios.get("http://localhost:3000/gallery"),
           axios.get("http://localhost:3000/careers"),
           axios.get("http://localhost:3000/createaccount"),
+          axios.get("http://localhost:3000/contacts"),
         ]);
 
         setStats({
           blogs: blogsRes.data?.data?.length || 0,
-          contacts: 0,
+          contacts: contactRes.data?.data?.length || 0,
           gallery: galleryRes.data?.data?.length || 0,
           careers: careersRes.data?.data?.length || 0,
           accounts: accountsRes.data?.data?.length || 0,

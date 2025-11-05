@@ -16,7 +16,6 @@ const jobColumns = [
   { key: 'job_description', label: 'Description' },
 ];
 
-
 export default function Careers() {
   const [careerForm, setCareerForm] = useState({
     job_role: '',
@@ -209,7 +208,7 @@ export default function Careers() {
         title="Job Openings"
         onEdit={(item) => editCareer(item._id)}
         onDelete={(item) => deleteCareer(item._id)}
-        baseImagePath="careers/"
+        // baseImagePath="careers/"
       />
     </>
   );

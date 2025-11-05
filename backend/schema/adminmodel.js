@@ -47,7 +47,7 @@ const addcontactSchema = new mongoose.Schema({
   contact_phone: { type: Number, required: true },
   contact_email: { type: String, required: true },
   contact_message: { type: String, required: true },
-}, { collection: "admincontact" });
+}, { collection: "admincontact", timestamps: true });
 const AdminContact = mongoose.model("AdminContact", addcontactSchema);
 
 module.exports = { AdminAccount, AdminGallery, AdminBlogs, AdminCareer, AdminContact };

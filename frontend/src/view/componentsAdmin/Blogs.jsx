@@ -116,26 +116,26 @@ const Blogs = () => {
           <form onSubmit={handleSubmit}>
             <div className="row">
               <div className="col-md-6 mb-3">
-                <label>Blog Title</label>
+                <label htmlFor="blog_title" className="form-label">Blog Title</label>
                 <div className="input-group">
                   <span className="input-group-text"><MdTitle /></span>
-                  <input name="blog_title" className="form-control" value={blogForm.blog_title} placeholder='Enter blog title' onChange={handleChange} required />
+                  <input name="blog_title" className="form-control" id='blog_title' value={blogForm.blog_title} placeholder='Enter blog title' onChange={handleChange} required />
                 </div>
               </div>
 
               <div className="col-md-6 mb-3">
-                <label>Author Name</label>
+                <label htmlFor="blog_author_name" className="form-label">Author Name</label>
                 <div className="input-group">
                   <span className="input-group-text"><FaFeatherAlt /></span>
-                  <input name="blog_author_name" className="form-control" value={blogForm.blog_author_name} placeholder='Enter author name' onChange={handleChange} required />
+                  <input name="blog_author_name" className="form-control" id='blog_author_name' value={blogForm.blog_author_name} placeholder='Enter author name' onChange={handleChange} required />
                 </div>
               </div>
 
               <div className="col-md-6 mb-3">
-                <label>Category</label>
+                <label htmlFor="blog_category" className="form-label">Category</label>
                 <div className="input-group">
                   <span className="input-group-text"><MdOutlineCategory /></span>
-                  <select name="blog_category" className="form-select" value={blogForm.blog_category} onChange={handleChange} required>
+                  <select name="blog_category" className="form-select" id='blog_category' value={blogForm.blog_category} onChange={handleChange} required>
                     <option value="" disabled>Select Category</option>
                     <option value="News">News</option>
                     <option value="Events">Events</option>
@@ -146,13 +146,13 @@ const Blogs = () => {
               </div>
 
               <div className="col-md-6 mb-3">
-                <label>Blog Image</label>
-                <input type="file" name="blog_image" className="form-control" onChange={handleFileChange} accept="image/*" required={!editId} />
+                <label htmlFor="blog_image" className="form-label">Blog Image</label>
+                <input type="file" name="blog_image" className="form-control" id='blog_image' onChange={handleFileChange} accept="image/*" required={!editId} />
               </div>
 
               <div className="col-12 mb-3">
-                <label>Blog Content</label>
-                <textarea name="blog_content" className="form-control" rows="4" value={blogForm.blog_content} placeholder='Enter blog content' onChange={handleChange} required />
+                <label htmlFor="blog_content" className="form-label">Blog Content</label>
+                <textarea name="blog_content" className="form-control" id='blog_content' rows="4" value={blogForm.blog_content} placeholder='Enter blog content' onChange={handleChange} required />
               </div>
             </div>
 

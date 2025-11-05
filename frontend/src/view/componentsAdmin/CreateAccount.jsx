@@ -169,7 +169,7 @@ export default function CreateAccount() {
             <div className="row">
               {/* FULL-NAME */}
               <div className="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12 mb-2">
-                <label htmlFor="fullname">Full Name</label>
+                <label htmlFor="fullname" className="form-label">Full Name</label>
                 <div className="input-group mb-3">
                   <span className="input-group-text"><MdOutlinePersonAddAlt1 size={21} /></span>
                   <input type="text" className="form-control" id="fullname" name="fullname" value={formData.fullname} onChange={handleChange} placeholder="Enter full name" />
@@ -178,7 +178,7 @@ export default function CreateAccount() {
 
               {/* MOBILE NUMBER */}
               <div className="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12 mb-2">
-                <label htmlFor="phoneno">Mobile Number</label>
+                <label htmlFor="phoneno" className="form-label">Mobile Number</label>
                 <div className="input-group mb-3">
                   <span className="input-group-text"><FaMobileAlt size={21} /></span>
                   <input type="tel" id="phoneno" name="phoneno" value={formData.phoneno} onChange={handleChange} className='form-control' placeholder="Enter mobile number" required />
@@ -187,7 +187,7 @@ export default function CreateAccount() {
 
               {/* EMAIL ADDRESS */}
               <div className="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12 mb-2">
-                <label htmlFor="email">Email Address</label>
+                <label htmlFor="email" className="form-label">Email Address</label>
                 <div className="input-group mb-3">
                   <span className="input-group-text"><MdOutlineEmail size={21} /></span>
                   <input type="email" id="email" name="email" value={formData.email} onChange={handleChange} className='form-control' placeholder="Enter email" required />
@@ -196,7 +196,7 @@ export default function CreateAccount() {
 
               {/* PASSWORD */}
               <div className="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12 mb-2">
-                <label htmlFor="password">Password</label>
+                <label htmlFor="password" className="form-label">Password</label>
                 <div className="input-group mb-3">
                   <span className="input-group-text"><FaLockOpen size={21} /></span>
                   <input type="password" id="password" name="password" value={formData.password} onChange={handleChange} className='form-control' placeholder="Enter password" required />
@@ -205,7 +205,7 @@ export default function CreateAccount() {
 
               {/* PROFILE - IMAGE */}
               <div className="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12 mb-2">
-                <label htmlFor="profile">Profile Image</label>
+                <label htmlFor="profile" className="form-label">Profile Image</label>
                 <input type="file" id="profile" name="profile" className='form-control' accept="image/*" onChange={handleChange} />
               </div>
 

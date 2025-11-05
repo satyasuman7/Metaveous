@@ -117,7 +117,7 @@ export default function Careers() {
             <div className="row">
               {/* Job Role */}
               <div className="col-md-6 mb-2">
-                <label htmlFor="job_role">Job Role</label>
+                <label htmlFor="job_role" className="form-label">Job Role</label>
                 <div className="input-group">
                   <span className="input-group-text"> <MdTitle size={21} /> </span>
                   <input type="text" id="job_role" name="job_role" className="form-control" value={careerForm.job_role} onChange={handleChange} required placeholder="Enter job role" />
@@ -126,7 +126,7 @@ export default function Careers() {
 
               {/* Job Location */}
               <div className="col-md-6 mb-2">
-                <label htmlFor="job_location">Job Location</label>
+                <label htmlFor="job_location" className="form-label">Job Location</label>
                 <div className="input-group">
                   <span className="input-group-text"> <IoLocationOutline size={21} /> </span>
                   <input
@@ -144,7 +144,7 @@ export default function Careers() {
 
               {/* Experience */}
               <div className="col-md-6 mb-2">
-                <label htmlFor="job_experience">Experience</label>
+                <label htmlFor="job_experience" className="form-label">Experience</label>
                 <div className="input-group">
                   <span className="input-group-text"> <IoLocationOutline size={21} /> </span>
                   <input type="text" id="job_experience" name="job_experience" className="form-control" value={careerForm.job_experience} onChange={handleChange} required placeholder="Enter required experience" />
@@ -153,7 +153,7 @@ export default function Careers() {
 
               {/* Vacancy */}
               <div className="col-md-6 mb-2">
-                <label htmlFor="job_vacancy">Vacancy</label>
+                <label htmlFor="job_vacancy" className="form-label">Vacancy</label>
                 <div className="input-group">
                   <span className="input-group-text"> <MdOutlinePersonSearch size={21} /> </span>
                   <input type="number" id="job_vacancy" name="job_vacancy" className="form-control" value={careerForm.job_vacancy} onChange={handleChange} required placeholder="Enter number of vacancies" />
@@ -162,7 +162,7 @@ export default function Careers() {
 
               {/* Type */}
               <div className="col-md-6 mb-2">
-                <label htmlFor="job_type">Job Type</label>
+                <label htmlFor="job_type" className="form-label">Job Type</label>
                 <div className="input-group">
                   <span className="input-group-text">
                     <MdOutlineCategory size={21} />
@@ -181,7 +181,7 @@ export default function Careers() {
 
               {/* Description */}
               <div className="col-md-6 mb-2">
-                <label htmlFor="job_description">Job Description</label>
+                <label htmlFor="job_description" className="form-label">Job Description</label>
                 <textarea rows="4" id="job_description" name="job_description" className="form-control" value={careerForm.job_description} onChange={handleChange} required placeholder="Enter job description"></textarea>
               </div>
             </div>
@@ -208,7 +208,6 @@ export default function Careers() {
         title="Job Openings"
         onEdit={(item) => editCareer(item._id)}
         onDelete={(item) => deleteCareer(item._id)}
-        // baseImagePath="careers/"
       />
     </>
   );

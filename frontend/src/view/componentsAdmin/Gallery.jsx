@@ -89,15 +89,15 @@ export default function Gallery() {
           <form onSubmit={handleSubmit}>
             <div className="row">
               <div className="col-md-6 mb-3">
-                <label>Gallery Title</label>
+                <label htmlFor="gallery_title" className="form-label">Gallery Title</label>
                 <div className="input-group">
                   <span className="input-group-text"><MdTitle /></span>
-                  <input name="gallery_title" placeholder="Enter gallery title" className="form-control" value={galleryForm.gallery_title} onChange={handleChange} required /> 
+                  <input name="gallery_title" placeholder="Enter gallery title" className="form-control" id='gallery_title' value={galleryForm.gallery_title} onChange={handleChange} required /> 
                 </div>
               </div>
               <div className="col-md-6 mb-3">
-                <label>Gallery Image</label>
-                <input type="file" name="gallery_image" className="form-control" onChange={handleFileChange} accept="image/*" required={!editId} />
+                <label htmlFor="gallery_image" className="form-label">Gallery Image</label>
+                <input type="file" name="gallery_image" className="form-control" id='gallery_image' onChange={handleFileChange} accept="image/*" required={!editId} />
                 {/* {editId && (
                   <div className="mt-2">
                     <p>Current Image:</p>

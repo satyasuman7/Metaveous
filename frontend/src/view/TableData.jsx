@@ -56,7 +56,7 @@ export default function TableData({ data, columns, title = "Data Table", onEdit,
   };
 
   return (
-    <div className="container mt-4">
+    <div className="container-fluid mt-4">
       <h4>{title}</h4>
 
       {/* Search */}
@@ -65,7 +65,7 @@ export default function TableData({ data, columns, title = "Data Table", onEdit,
       </div>
 
       {/* Table */}
-      <table className="table table-bordered table-hover">
+      <table className="table table-bordered table-hover table_style">
         <thead className="table-dark">
           <tr>
             <th>#</th>
@@ -80,15 +80,18 @@ export default function TableData({ data, columns, title = "Data Table", onEdit,
         </thead>
         <tbody>
           {paginatedData.length === 0 ? (
-            <tr><td colSpan={columns.length + 2} className="text-center">No data found</td></tr>
+            <tr><td colSpan={columns.length + 3} className="text-center">No data found</td></tr>
           ) : (
             paginatedData.map((item, index) => (
               <tr key={item.id || index}>
                 <td>{(currentPage - 1) * itemsPerPage + index + 1}</td>
                 {columns.map(col => (
-                  <td key={col.key}>
+                  <td
+                    key={col.key}
+                    className={`${col.key === 'blog_content' || col.key === 'description' || col.key === 'job_description' ? 'tableRow_style' : ''} ${col.key === 'blog_title' ? 'tableRow2_style' : ''}`} >
+
                     {col.isImage ? (
-                      <img src={`http://localhost:3000/uploads/${baseImagePath}${item[col.key]}`} alt="img" style={{ width: '100px', borderRadius: '4px' }} />
+                      <img src={`http://localhost:3000/uploads/${baseImagePath}${item[col.key]}`} alt="profile-img" style={{ width: '80px', height: '80px', borderRadius: '4px', objectFit: 'cover' }} />
                     ) : col.key === 'status' ? (
                       <span className={`badge rounded-pill ${item.status ? 'bg-success' : 'bg-danger'}`}>
                         {item.status ? 'Active' : 'Inactive'}
@@ -101,8 +104,8 @@ export default function TableData({ data, columns, title = "Data Table", onEdit,
                 ))}
                 {(onEdit || onDelete) && (
                   <td>
-                    {onEdit && (<button className="btn btn-warning btn-sm me-2" onClick={() => onEdit(item)}> <AiFillEdit size={21} /> </button>)}
-                    {onDelete && (<button className="btn btn-danger btn-sm" onClick={() => onDelete(item)}> <MdDeleteForever size={21} /> </button>)}
+                    {onEdit && (<button className="btn btn-warning btn-sm me-2 mb-2" onClick={() => onEdit(item)}> <AiFillEdit size={21} /> </button>)}
+                    {onDelete && (<button className="btn btn-danger btn-sm mb-2" onClick={() => onDelete(item)}> <MdDeleteForever size={21} /> </button>)}
                   </td>
                 )}
                 {/* <td>{new Date(item.createdAt).toLocaleDateString()}</td> */}

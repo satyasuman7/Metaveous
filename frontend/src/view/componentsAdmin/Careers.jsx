@@ -190,8 +190,13 @@ export default function Careers() {
             {/* Submit */}
             <div className="text-end mt-3">
               <button type="submit" className="btn btn-primary">
-                Add Job
+                {editId ? "Update Job" : "Add Job"}
               </button>
+              {editId && (
+                <button type="button" className="btn btn-secondary ms-2" onClick={() => { setEditId(null); setCareerForm({ job_role: '', job_location: '', job_experience: '', job_vacancy: '', job_type: '', job_description: '' }); }}>
+                  Cancel
+                </button>
+              )}
             </div>
           </form>
         </div>

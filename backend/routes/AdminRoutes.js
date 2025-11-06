@@ -72,6 +72,7 @@ router.get("/createaccount", async (req, res) => {
 router.post("/createaccount", upload.single("profile"), async (req, res) => {
   try {
     const { fullname, email, password, phoneno, status } = req.body;
+
     if (!fullname || !email || !password || !phoneno || !req.file) {
       return res.status(400).json({ success: false, msg: "All fields including profile image are required" });
     }
@@ -79,23 +80,28 @@ router.post("/createaccount", upload.single("profile"), async (req, res) => {
     const existingByName = await AdminAccount.findOne({ fullname });
     const existingByEmail = await AdminAccount.findOne({ email });
 
-    if (existingByName && existingByEmail) return res.status(400).json({ msg: "Both name and email are already registered" });
-    if (existingByName) return res.status(400).json({ msg: "Name is already registered" });
-    if (existingByEmail) return res.status(400).json({ msg: "Email is already registered" });
+    if (existingByName && existingByEmail) {
+      deleteFile(req.file.filename);
+      return res.status(400).json({ msg: "Both name and email are already registered" });
+    }
+    if (existingByName) {
+      deleteFile(req.file.filename);
+      return res.status(400).json({ msg: "Name is already registered" });
+    }
+    if (existingByEmail) {
+      deleteFile(req.file.filename);
+      return res.status(400).json({ msg: "Email is already registered" });
+    }
 
-    const newAdmin = new AdminAccount({
-      fullname,
-      email,
-      password,
-      phoneno,
-      profile: req.file.filename,
-      status: status === "true" || status === true,
-    });
+    const newAdmin = new AdminAccount({ fullname, email, password, phoneno, profile: req.file.filename, status: status === "true" || status === true });
 
     await newAdmin.save();
 
     jwt.sign({ id: newAdmin._id, email }, "Google", { expiresIn: "5d" }, (err, token) => {
-      if (err) return res.status(500).json({ success: false, msg: "Error generating token" });
+      if (err) {
+        console.error("JWT error:", err);
+        return res.status(500).json({ success: false, msg: "Error generating token" });
+      }
       res.json({ success: true, msg: "Account Created Successfully", token, createdAt: newAdmin.createdAt });
     });
   } catch (err) {

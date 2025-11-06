@@ -1,8 +1,12 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Card from "react-bootstrap/Card";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export default function Dashboard() {
+  const [userName, setUserName] = useState('');
+  const navigate = useNavigate();
+  const location = useLocation();
   const [stats, setStats] = useState({
     blogs: 0,
     contacts: 0,
@@ -45,9 +49,20 @@ export default function Dashboard() {
     { label: "Total Account", count: stats.accounts, bg: "rgba(6, 109, 112, 1)" },
   ];
 
+  useEffect(() => {
+    const tokenCookie = document.cookie.split('; ').find(row => row.startsWith('token='));
+    if (!tokenCookie) {
+      navigate('/');
+      return;
+    }
+    else if (location.state?.userName) {
+      setUserName(location.state.userName);
+    }
+  }, [navigate, location.state?.userName]);
+
   return (
     <div className="p-3">
-      <h3 className="mb-4 text-secondary">Welcome Admin !!!</h3>
+      <h3 className="mb-4 text-secondary">Welcome {userName} !!!</h3>
       <div className="row">
         {items.map((item, index) => (
           <div key={index} className="col-xl-3 col-lg-3 col-md-6 col-sm-6 mb-4 d-flex">

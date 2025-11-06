@@ -40,11 +40,16 @@ router.post("/signin", async (req, res) => {
     if (!email || !password) return res.status(400).json({ success: false, msg: "Email and password are required" });
 
     const user = await AdminAccount.findOne({ email });
-    if (!user || user.password !== password) return res.status(401).json({ success: false, msg: "Invalid credentials" });
+    if (!user || user.password !== password) {
+      return res.status(401).json({ success: false, msg: "Invalid credentials" });
+    }
 
     jwt.sign({ id: user._id, email: user.email }, "Google", { expiresIn: "5d" }, (err, token) => {
-      if (err) return res.status(500).json({ success: false, msg: "Error generating token" });
-      res.json({ success: true, msg: "SignIn successful", name: user.fullname, token });
+      if (err) {
+        console.error("Token generation error:", err);
+        return res.status(500).json({ success: false, msg: "Error generating token" });
+      }
+      res.json({ success: true, msg: "SignIn successful", name: user.fullname, token, image: user.profile });
     });
   } catch (err) {
     console.error("SignIn error:", err);
@@ -91,7 +96,7 @@ router.post("/createaccount", upload.single("profile"), async (req, res) => {
 
     jwt.sign({ id: newAdmin._id, email }, "Google", { expiresIn: "5d" }, (err, token) => {
       if (err) return res.status(500).json({ success: false, msg: "Error generating token" });
-      res.json({ success: true, msg: "Signup done", token, createdAt: newAdmin.createdAt });
+      res.json({ success: true, msg: "Account Created Successfully", token, createdAt: newAdmin.createdAt });
     });
   } catch (err) {
     console.error("Signup error:", err);

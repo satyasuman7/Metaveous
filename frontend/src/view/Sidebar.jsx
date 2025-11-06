@@ -1,7 +1,8 @@
 import './style.css';
-import { useState } from 'react';
-import { NavLink, Outlet, useLocation } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import Offcanvas from 'react-bootstrap/Offcanvas';
+import { toast } from 'react-toastify';
 
 // ICONS
 import { RiMenu2Fill, RiAccountPinCircleLine, RiContactsBook3Line } from "react-icons/ri";
@@ -13,6 +14,9 @@ import IntroCard from './IntroCard';
 const Sidebar = () => {
   const [show, setShow] = useState(false);
   const location = useLocation();
+  const [userName, setUserName] = useState('');
+  const [userImage, setUserImage] = useState('');
+  const navigate = useNavigate();
 
   // close & open off-canvas
   const handleClose = () => setShow(false);
@@ -30,6 +34,42 @@ const Sidebar = () => {
   // Find title based on current route
   const currentItem = navItems.find(item => item.path === location.pathname);
   const currentTitle = currentItem ? currentItem.label : 'Page';
+
+  // useEffect(() => {
+  //   const tokenCookie = document.cookie.split('; ').find(row => row.startsWith('token='));
+  //   if (!tokenCookie) {
+  //     toast.warning("Please log in first!");
+  //     navigate('/');
+  //     return;
+  //   }
+  //   else if (location.state?.userName) {
+  //     setUserName(location.state.userName);
+  //     console.log("Username from state:", location);
+  //   }
+  // }, [navigate, location.state?.userName]);
+
+  useEffect(() => {
+    const tokenCookie = document.cookie.split('; ').find(row => row.startsWith('token='));
+    if (!tokenCookie) {
+      toast.warning("Please log in first!");
+      navigate('/');
+      return;
+    }
+
+    // ✅ Set user details directly from login state
+    if (location.state?.userName) {
+      setUserName(location.state.userName);
+    }
+    if (location.state?.userImage) {
+      setUserImage(location.state.userImage);
+    }
+  }, [navigate, location.state]);
+
+  const handleLogout = () => {
+    document.cookie = "token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
+    toast.info("Logged out successfully!");
+    navigate('/');
+  };
 
   return (
     <>
@@ -53,13 +93,13 @@ const Sidebar = () => {
           <br /> <br />
           <div className="dropdown px-3">
             <NavLink className="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser2" data-bs-toggle="dropdown" aria-expanded="false">
-              <img src="https://github.com/mdo.png" alt="profile" width="40" height="40" className="rounded-circle me-2" />
-              <strong>Admin</strong>
+              <img src={`http://localhost:3000/uploads/${userImage}`} alt="profile" width="40" height="40" className="rounded-circle me-2" />
+              <strong>{userName}</strong>
             </NavLink>
             <ul className="dropdown-menu text-small shadow" aria-labelledby="dropdownUser2">
               <li><NavLink className="dropdown-item" to="/profile">Profile</NavLink></li>
               <li><hr className="dropdown-divider" /></li>
-              <li><NavLink className="dropdown-item" to="/signin">Sign out</NavLink></li>
+              <li><button className="dropdown-item" onClick={handleLogout}>Sign out</button></li>
             </ul>
           </div>
         </div>
@@ -75,13 +115,13 @@ const Sidebar = () => {
               <NavLink className="navbar-brand mx-auto">Admin</NavLink>
               <div className="dropdown">
                 <NavLink to="#" className="d-flex align-items-center text-dark text-decoration-none dropdown-toggle" id="dropdownUser2" data-bs-toggle="dropdown" aria-expanded="false">
-                  <img src="https://github.com/mdo.png" alt="" width="40" height="40" className="rounded-circle me-2" />
-                  <strong>Admin</strong>
+                  <img src={`http://localhost:3000/uploads/${userImage}`} alt="profile" width="40" height="40" className="rounded-circle me-2" />
+                  <strong>{userName}</strong>
                 </NavLink>
                 <ul className="dropdown-menu dropdown-menu-end text-small shadow" aria-labelledby="dropdownUser2">
                   <li><NavLink className="dropdown-item" to="/profile">Profile</NavLink></li>
                   <li><hr className="dropdown-divider" /></li>
-                  <li><NavLink className="dropdown-item" to="/signin">Sign out</NavLink></li>
+                  <li><button className="dropdown-item" onClick={handleLogout}>Sign out</button></li>
                 </ul>
               </div>
             </div>

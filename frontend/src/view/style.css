@@ -162,6 +162,15 @@ input:checked + .slider:before {
 }
 
 /* ADMIN SIGNIN SECTION */
-/* .signin_card{
-  
-} */
+.card_style{
+  width: 400px;
+  border: none;
+  border-radius: 10px;
+}
+
+.background_image{
+  background: url("../../signin.svg");
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+}

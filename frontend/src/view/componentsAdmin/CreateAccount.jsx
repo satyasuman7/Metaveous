@@ -91,7 +91,10 @@ export default function CreateAccount() {
         });
 
         if (res.status === 200 || res.status === 201) {
-          toast.success("Account created successfully");
+          if (res.data.token) {
+            document.cookie = `token=${res.data.token}; path=/;`;
+          }
+          toast.success(res.data.msg || 'Signup successful!');
           setFormData({ fullname: '', phoneno: '', email: '', password: '', profile: null, status: false });
           fetchUsers();
         } else {
@@ -99,7 +102,7 @@ export default function CreateAccount() {
         }
       } catch (error) {
         console.error("Error submitting form:", error.response?.data || error.message);
-        toast.error("Failed to create account.");
+        toast.error( error.response?.data?.msg || "Failed to create account.");
       }
     }
   };

@@ -1,13 +1,12 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Card from "react-bootstrap/Card";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 export default function Dashboard() {
   const [userName, setUserName] = useState('');
   const navigate = useNavigate();
-  const location = useLocation();
   const [stats, setStats] = useState({
     blogs: 0,
     contacts: 0,

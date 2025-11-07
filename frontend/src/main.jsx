@@ -22,7 +22,7 @@ import ProtectedRoute from './view/ProtectedRoute.jsx';
 createRoot(document.getElementById('root')).render(
   <BrowserRouter>
     <Routes>
-      <Route path='/' element={<AdminSignin />} />
+      <Route path='/adminsignin' element={<AdminSignin />} />
       <Route path='/admin' element={<ProtectedRoute><Sidebar /></ProtectedRoute>}>
         <Route index element={<Dashboard />} />
         <Route path='/admin/createaccount' element={<CreateAccount />} />

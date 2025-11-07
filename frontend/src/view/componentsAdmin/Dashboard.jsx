@@ -68,7 +68,7 @@ export default function Dashboard() {
         console.error("Profile fetch error:", err);
         toast.error("Session expired, please log in again.");
         document.cookie = "token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
-        navigate('/');
+        navigate('/adminsignin');
       });
   }, [navigate]);
 

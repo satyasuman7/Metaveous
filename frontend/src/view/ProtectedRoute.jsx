@@ -7,7 +7,7 @@ export default function ProtectedRoute({ children }) {
 
   if (!token) {
     toast.warning("Please log in first!");
-    return <Navigate to="/" replace />;
+    return <Navigate to="/adminsignin" replace />;
   }
   return children;
 }

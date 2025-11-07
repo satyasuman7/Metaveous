@@ -51,7 +51,7 @@ const Sidebar = () => {
       .catch(err => {
         toast.error("Session expired, please log in again.");
         document.cookie = "token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
-        navigate('/');
+        navigate('/adminsignin');
       });
   }, [navigate]);
 
@@ -59,7 +59,7 @@ const Sidebar = () => {
   const handleLogout = () => {
     document.cookie = "token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
     toast.info("Logged out successfully!");
-    navigate('/');
+    navigate('/adminsignin');
   };
 
   return (

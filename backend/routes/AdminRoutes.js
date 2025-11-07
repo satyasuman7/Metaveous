@@ -77,7 +77,7 @@ router.post("/signin", async (req, res) => {
       return res.status(403).json({ success: false, msg: "Account is Inactive. Contact admin." });
     }
 
-    jwt.sign({ id: user._id, email: user.email }, "Google", { expiresIn: "5d" }, (err, token) => {
+    jwt.sign({ id: user._id, email: user.email }, "Google", { expiresIn: "8h" }, (err, token) => {
       if (err) {
         console.error("Token generation error:", err);
         return res.status(500).json({ success: false, msg: "Error generating token" });
@@ -126,11 +126,11 @@ router.post("/createaccount", upload.single("profile"), async (req, res) => {
       return res.status(400).json({ msg: "Email is already registered" });
     }
 
-    const newAdmin = new AdminAccount({ fullname, email, password, phoneno, profile: req.file.filename, status: status === "true" || status === true });
+    const newAdmin = new AdminAccount({ fullname, email, password, phoneno, profile: req.file.filename, status: status === "true" });
 
     await newAdmin.save();
 
-    jwt.sign({ id: newAdmin._id, email }, "Google", { expiresIn: "5d" }, (err, token) => {
+    jwt.sign({ id: newAdmin._id, email }, "Google", { expiresIn: "8h" }, (err, token) => {
       if (err) {
         console.error("JWT error:", err);
         return res.status(500).json({ success: false, msg: "Error generating token" });

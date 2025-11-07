@@ -65,60 +65,61 @@ export default function TableData({ data, columns, title = "Data Table", onEdit,
       </div>
 
       {/* Table */}
-      <table className="table table-bordered table-hover table_style">
-        <thead className="table-dark">
-          <tr>
-            <th>#</th>
-            {columns.map(col => (
-              <th key={col.key} role="button" onClick={() => handleSort(col.key)}>
-                {col.label} {getSortIcon(col.key)}
-              </th>
-            ))}
-            {(onEdit || onDelete) && <th>Actions</th>}
-            <th>Created Date</th>
-          </tr>
-        </thead>
-        <tbody>
-          {paginatedData.length === 0 ? (
-            <tr><td colSpan={columns.length + 3} className="text-center">No data found</td></tr>
-          ) : (
-            paginatedData.map((item, index) => (
-              <tr key={item.id || index}>
-                <td>{(currentPage - 1) * itemsPerPage + index + 1}</td>
-                {columns.map(col => (
-                  <td
-                    key={col.key}
-                    className={`${col.key === 'blog_content' || col.key === 'description' || col.key === 'job_description' ? 'tableRow_style' : ''} ${col.key === 'blog_title' ? 'tableRow2_style' : ''}`} >
+      <div className='table-responsive'>
+        <table className="table table-bordered table-hover table_style">
+          <thead className="table-dark">
+            <tr>
+              <th>#</th>
+              {columns.map(col => (
+                <th key={col.key} role="button" onClick={() => handleSort(col.key)}>
+                  {col.label} {getSortIcon(col.key)}
+                </th>
+              ))}
+              {(onEdit || onDelete) && <th>Actions</th>}
+              <th>Created Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            {paginatedData.length === 0 ? (
+              <tr><td colSpan={columns.length + 3} className="text-center">No data found</td></tr>
+            ) : (
+              paginatedData.map((item, index) => (
+                <tr key={item.id || index}>
+                  <td>{(currentPage - 1) * itemsPerPage + index + 1}</td>
+                  {columns.map(col => (
+                    <td
+                      key={col.key}
+                      className={`${col.key === 'blog_content' || col.key === 'description' || col.key === 'job_description' ? 'tableRow_style' : ''} ${col.key === 'blog_title' ? 'tableRow2_style' : ''}`} >
 
-                    {col.isImage ? (
-                      <img src={`http://localhost:3000/uploads/${baseImagePath}${item[col.key]}`} alt="profile-img" className='rounded-2' style={{ width: '80px', height: '80px', objectFit: 'cover' }} />
-                    ) : col.key === 'status' ? (
-                      <span className={`badge rounded-pill ${item.status ? 'bg-success' : 'bg-danger'}`}>
-                        {item.status ? 'Active' : 'Inactive'}
-                      </span>
-                    ) : (
-                      item[col.key]
-                    )}
-                  </td>
+                      {col.isImage ? (
+                        <img src={`http://localhost:3000/uploads/${baseImagePath}${item[col.key]}`} alt="profile-img" className='rounded-2' style={{ width: '80px', height: '80px', objectFit: 'cover' }} />
+                      ) : col.key === 'status' ? (
+                        <span className={`badge rounded-pill ${item.status ? 'bg-success' : 'bg-danger'}`}>
+                          {item.status ? 'Active' : 'Inactive'}
+                        </span>
+                      ) : (
+                        item[col.key]
+                      )}
+                    </td>
 
-                ))}
-                {(onEdit || onDelete) && (
-                  <td>
-                    {onEdit && (<button className="btn btn-warning btn-sm me-2 mb-2" onClick={() => onEdit(item)}> <AiFillEdit size={21} /> </button>)}
-                    {onDelete && (<button className="btn btn-danger btn-sm mb-2" onClick={() => onDelete(item)}> <MdDeleteForever size={21} /> </button>)}
-                  </td>
-                )}
-                {/* <td>{new Date(item.createdAt).toLocaleDateString()}</td> */}
-                <td>{new Date(item.createdAt).toLocaleDateString().replace(/\//g, '-')}</td>
+                  ))}
+                  {(onEdit || onDelete) && (
+                    <td>
+                      {onEdit && (<button className="btn btn-warning btn-sm me-2 mb-2" onClick={() => onEdit(item)}> <AiFillEdit size={21} /> </button>)}
+                      {onDelete && (<button className="btn btn-danger btn-sm mb-2" onClick={() => onDelete(item)}> <MdDeleteForever size={21} /> </button>)}
+                    </td>
+                  )}
+                  {/* <td>{new Date(item.createdAt).toLocaleDateString()}</td> */}
+                  <td>{new Date(item.createdAt).toLocaleDateString().replace(/\//g, '-')}</td>
 
-              </tr>
-            ))
-          )}
-        </tbody>
-      </table>
-
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
+      </div>
       {/* Pagination */}
-      <div className="d-flex justify-content-center">
+      <div className="d-block d-lg-flex justify-content-center">
         <button className="btn btn-outline-primary me-2" onClick={() => setCurrentPage(p => Math.max(p - 1, 1))} disabled={currentPage === 1}>
           <TbArrowBigLeftLineFilled />
         </button>

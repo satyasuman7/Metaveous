@@ -64,7 +64,7 @@ const Sidebar = () => {
 
   return (
     <>
-      <div className="d-flex min-vh-100">
+      <div className="d-block d-lg-flex d-md-flex min-vh-100">
         {/* sidebar for desktop */}
         <div className="d-none d-lg-block bg-dark border-end sidebar py-4 ">
           <NavLink to="/admin" className="d-flex align-items-center mb-3 px-3 mb-md-0 me-md-auto text-white text-decoration-none">

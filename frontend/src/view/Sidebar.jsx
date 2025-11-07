@@ -38,11 +38,6 @@ const Sidebar = () => {
 
   useEffect(() => {
     const tokenCookie = document.cookie.split('; ').find(row => row.startsWith('token='));
-    if (!tokenCookie) {
-      toast.warning("Please log in first!");
-      navigate('/');
-      return;
-    }
     const token = tokenCookie.split('=')[1];
     axios.get("http://localhost:3000/profile", {
       headers: { Authorization: `Bearer ${token}` },

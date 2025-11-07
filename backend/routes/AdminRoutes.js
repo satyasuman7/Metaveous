@@ -69,8 +69,12 @@ router.post("/signin", async (req, res) => {
     if (!email || !password) return res.status(400).json({ success: false, msg: "Email and password are required" });
 
     const user = await AdminAccount.findOne({ email });
+
     if (!user || user.password !== password) {
       return res.status(401).json({ success: false, msg: "Invalid credentials" });
+    }
+    if (user.status === false) {
+      return res.status(403).json({ success: false, msg: "Account is Inactive. Contact admin." });
     }
 
     jwt.sign({ id: user._id, email: user.email }, "Google", { expiresIn: "5d" }, (err, token) => {

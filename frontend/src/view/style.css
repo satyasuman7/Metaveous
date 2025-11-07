@@ -5,6 +5,10 @@ body{
 .sidebar {
   min-width: 280px;
 }
+.offcanvas-backdrop.show{
+  width: 100%;
+  height: 100%;
+}
 .mobile_offcanvas {
   width: 300px !important;
 }

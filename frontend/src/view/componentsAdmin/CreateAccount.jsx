@@ -16,15 +16,10 @@ const userColumns = [
   { key: 'status', label: 'Status' },
 ];
 
+const initialFormState = { fullname: "", email: "", password: "", phoneno: "", profile: null, status: false };
+
 export default function CreateAccount() {
-  const [formData, setFormData] = useState({
-    fullname: '',
-    phoneno: '',
-    email: '',
-    password: '',
-    profile: null,
-    status: false,
-  });
+  const [formData, setFormData] = useState(initialFormState);
   const [userData, setUserData] = useState([]);
   const [editId, setEditId] = useState(null);
 
@@ -229,7 +224,7 @@ export default function CreateAccount() {
               </button>
               {editId && (
                 <button type="button" className="btn btn-secondary ms-3" onClick={() => {
-                  setFormData({ fullname: "", email: "", password: "", phoneno: "", profile: null, status: false });
+                  setFormData(initialFormState);
                   setEditId(null);
                 }}>Cancel</button>
               )}

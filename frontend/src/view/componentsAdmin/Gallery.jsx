@@ -98,12 +98,12 @@ export default function Gallery() {
               <div className="col-md-6 mb-3">
                 <label htmlFor="gallery_image" className="form-label">Gallery Image</label>
                 <input type="file" name="gallery_image" className="form-control" id='gallery_image' onChange={handleFileChange} accept="image/*" required={!editId} />
-                {/* {editId && (
+                {editId && (
                   <div className="mt-2">
-                    <p>Current Image:</p>
-                    <img src={`http://localhost:3000/gallery/${galleryList.find(i => i._id === editId)?.gallery_image}`} alt={`${galleryList.find(i => i._id === editId)?.gallery_image}`} style={{ maxWidth: '150px' }} />
+                    <span>Current Image :</span>
+                    <img src={`http://localhost:3000/uploads/gallery/${galleryList.find(i => i._id === editId)?.gallery_image}`} alt={`${galleryList.find(i => i._id === editId)?.gallery_image}`} className='w-25 ms-3 mt-3 rounded' />
                   </div>
-                )} */}
+                )}
               </div>
             </div>
             <div className="text-end">

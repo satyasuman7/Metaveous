@@ -3,13 +3,14 @@ import { useEffect, useState } from 'react';
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import Offcanvas from 'react-bootstrap/Offcanvas';
 import { toast } from 'react-toastify';
+import IntroCard from './IntroCard';
+import axios from 'axios';
 
 // ICONS
 import { RiMenu2Fill, RiAccountPinCircleLine, RiContactsBook3Line } from "react-icons/ri";
 import { ImBlogger } from "react-icons/im";
 import { TfiHome, TfiGallery } from "react-icons/tfi";
 import { HiOutlineBuildingOffice } from "react-icons/hi2";
-import IntroCard from './IntroCard';
 
 const Sidebar = () => {
   const [show, setShow] = useState(false);
@@ -35,19 +36,6 @@ const Sidebar = () => {
   const currentItem = navItems.find(item => item.path === location.pathname);
   const currentTitle = currentItem ? currentItem.label : 'Page';
 
-  // useEffect(() => {
-  //   const tokenCookie = document.cookie.split('; ').find(row => row.startsWith('token='));
-  //   if (!tokenCookie) {
-  //     toast.warning("Please log in first!");
-  //     navigate('/');
-  //     return;
-  //   }
-  //   else if (location.state?.userName) {
-  //     setUserName(location.state.userName);
-  //     console.log("Username from state:", location);
-  //   }
-  // }, [navigate, location.state?.userName]);
-
   useEffect(() => {
     const tokenCookie = document.cookie.split('; ').find(row => row.startsWith('token='));
     if (!tokenCookie) {
@@ -55,15 +43,23 @@ const Sidebar = () => {
       navigate('/');
       return;
     }
+    const token = tokenCookie.split('=')[1];
+    axios.get("http://localhost:3000/profile", {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+      .then(res => {
+        if (res.data.success) {
+          setUserName(res.data.name);
+          setUserImage(res.data.image);
+        }
+      })
+      .catch(err => {
+        toast.error("Session expired, please log in again.");
+        document.cookie = "token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
+        navigate('/');
+      });
+  }, [navigate]);
 
-    // ✅ Set user details directly from login state
-    if (location.state?.userName) {
-      setUserName(location.state.userName);
-    }
-    if (location.state?.userImage) {
-      setUserImage(location.state.userImage);
-    }
-  }, [navigate, location.state]);
 
   const handleLogout = () => {
     document.cookie = "token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";

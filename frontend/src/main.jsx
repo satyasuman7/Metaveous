@@ -17,12 +17,13 @@ import Careers from './view/componentsAdmin/Careers.jsx'
 import ContactView from './view/componentsAdmin/ContactView.jsx'
 // import TableData from './view/TableData.jsx';
 import AdminSignin from './view/componentsAdmin/AdminSignin.jsx';
+import ProtectedRoute from './view/ProtectedRoute.jsx';
 
 createRoot(document.getElementById('root')).render(
   <BrowserRouter>
     <Routes>
       <Route path='/' element={<AdminSignin />} />
-      <Route path='/admin' element={<Sidebar />}>
+      <Route path='/admin' element={<ProtectedRoute><Sidebar /></ProtectedRoute>}>
         <Route index element={<Dashboard />} />
         <Route path='/admin/createaccount' element={<CreateAccount />} />
         <Route path='/admin/gallery' element={<Gallery />} />

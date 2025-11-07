@@ -33,6 +33,35 @@ const deleteFile = (filename) => {
   }
 };
 
+// ✅ Get Logged-in Admin Profile using JWT token
+router.get("/profile", async (req, res) => {
+  try {
+    const authHeader = req.headers.authorization;
+    if (!authHeader) return res.status(401).json({ success: false, msg: "No token provided" });
+
+    const token = authHeader.split(" ")[1];
+
+    jwt.verify(token, "Google", async (err, decoded) => {
+      if (err) return res.status(403).json({ success: false, msg: "Invalid or expired token" });
+
+      const user = await AdminAccount.findById(decoded.id);
+      if (!user) return res.status(404).json({ success: false, msg: "User not found" });
+
+      res.status(200).json({
+        success: true,
+        name: user.fullname,
+        image: user.profile,
+        email: user.email,
+        phoneno: user.phoneno,
+      });
+    });
+  } catch (err) {
+    console.error("Profile fetch error:", err);
+    res.status(500).json({ success: false, msg: "Internal Server Error" });
+  }
+});
+
+
 // Admin Signin
 router.post("/signin", async (req, res) => {
   try {

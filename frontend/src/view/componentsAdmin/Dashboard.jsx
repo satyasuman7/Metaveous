@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import Card from "react-bootstrap/Card";
 import { useLocation, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 export default function Dashboard() {
   const [userName, setUserName] = useState('');
@@ -55,10 +56,22 @@ export default function Dashboard() {
       navigate('/');
       return;
     }
-    else if (location.state?.userName) {
-      setUserName(location.state.userName);
-    }
-  }, [navigate, location.state?.userName]);
+    const token = tokenCookie.split('=')[1];
+    axios.get("http://localhost:3000/profile", {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+      .then(res => {
+        if (res.data.success) {
+          setUserName(res.data.name);
+        }
+      })
+      .catch(err => {
+        console.error("Profile fetch error:", err);
+        toast.error("Session expired, please log in again.");
+        document.cookie = "token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
+        navigate('/');
+      });
+  }, [navigate]);
 
   return (
     <div className="p-3">

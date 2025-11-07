@@ -7,21 +7,24 @@ import { ToastContainer } from 'react-toastify';
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap/dist/js/bootstrap.bundle.js'
 
-//PAGES
-import Sidebar from './view/Sidebar.jsx'
-import Dashboard from './view/componentsAdmin/Dashboard.jsx'
-import CreateAccount from './view/componentsAdmin/CreateAccount.jsx'
-import Gallery from './view/componentsAdmin/Gallery.jsx'
-import Blogs from './view/componentsAdmin/Blogs.jsx'
-import Careers from './view/componentsAdmin/Careers.jsx'
-import ContactView from './view/componentsAdmin/ContactView.jsx'
-// import TableData from './view/TableData.jsx';
+//ADMIN PAGES
+import Sidebar from './view/Sidebar.jsx';
+import Dashboard from './view/componentsAdmin/Dashboard.jsx';
+import CreateAccount from './view/componentsAdmin/CreateAccount.jsx';
+import Gallery from './view/componentsAdmin/Gallery.jsx';
+import Blogs from './view/componentsAdmin/Blogs.jsx';
+import Careers from './view/componentsAdmin/Careers.jsx';
+import ContactView from './view/componentsAdmin/ContactView.jsx';
 import AdminSignin from './view/componentsAdmin/AdminSignin.jsx';
 import ProtectedRoute from './view/ProtectedRoute.jsx';
+
+// WEBSITE PAGES
+import Home from './view/componentsWebsite/Home.jsx';
 
 createRoot(document.getElementById('root')).render(
   <BrowserRouter>
     <Routes>
+      {/* ADMIN PANEL */}
       <Route path='/adminsignin' element={<AdminSignin />} />
       <Route path='/admin' element={<ProtectedRoute><Sidebar /></ProtectedRoute>}>
         <Route index element={<Dashboard />} />
@@ -31,6 +34,9 @@ createRoot(document.getElementById('root')).render(
         <Route path='/admin/careers' element={<Careers />} />
         <Route path='/admin/contactview' element={<ContactView />} />
       </Route>
+
+      {/* WEBSITE PANEL */}
+      <Route path='/' element={<Home />} />
     </Routes>
     <ToastContainer />
   </BrowserRouter>

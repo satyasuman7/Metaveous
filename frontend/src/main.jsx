@@ -17,9 +17,9 @@ import Careers from './view/componentsAdmin/Careers.jsx';
 import ContactView from './view/componentsAdmin/ContactView.jsx';
 import AdminSignin from './view/componentsAdmin/AdminSignin.jsx';
 import ProtectedRoute from './view/ProtectedRoute.jsx';
+import Home from './view/componentsWebsite/Pages/Home.jsx';
 
 // WEBSITE PAGES
-import Home from './view/componentsWebsite/Home.jsx';
 
 createRoot(document.getElementById('root')).render(
   <BrowserRouter>

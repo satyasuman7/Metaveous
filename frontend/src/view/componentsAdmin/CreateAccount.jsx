@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import TableData from '../TableData';
 
 // ICONS
-import { FaMobileAlt, FaLockOpen } from "react-icons/fa";
+import { FaMobileAlt, FaLockOpen, FaCamera } from "react-icons/fa";
 import { MdOutlineEmail, MdOutlinePersonAddAlt1 } from "react-icons/md";
-import TableData from '../TableData';
 
 const userColumns = [
   { key: 'fullname', label: 'Full Name' },
@@ -22,14 +22,8 @@ export default function CreateAccount() {
   const [formData, setFormData] = useState(initialFormState);
   const [userData, setUserData] = useState([]);
   const [editId, setEditId] = useState(null);
-
-  const handleChange = (e) => {
-    const { name, value, type, checked, files } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: type === 'file' ? files[0] : type === 'checkbox' ? checked : value,
-    }));
-  };
+  const [imagePreview, setImagePreview] = useState(null);
+  const fileInputRef = useRef(null);
 
   // GET user
   const fetchUsers = async () => {
@@ -38,7 +32,7 @@ export default function CreateAccount() {
       if (res.data && res.data.data) {
         const normalizedData = res.data.data.map(user => ({
           ...user,
-          status: user.status === true || user.status === "true" || user.status === "Active"
+          status: user.status === true || user.status === "true" || user.status === "Active",
         }));
         setUserData(normalizedData);
       } else {
@@ -53,108 +47,106 @@ export default function CreateAccount() {
     fetchUsers();
   }, []);
 
+  // ✅ Open Camera/File Picker
+  const openCamera = (e) => {
+    e.preventDefault();
+    fileInputRef.current?.click();
+  };
+
+  // ✅ Image Change Preview
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (!file || !file.type.startsWith("image/")) {
+      toast.error("Please select a valid image file.");
+      return;
+    }
+    setFormData(prev => ({ ...prev, profile: file }));
+    setImagePreview(URL.createObjectURL(file));
+  };
+
+  // ✅ Input Change Handler
+  const handleChange = (e) => {
+    const { name, value, type, checked, files } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: type === 'file' ? files[0] : type === 'checkbox' ? checked : value,
+    }));
+  };
+
   // POST user
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     const phoneRegex = /^[0-9]{10}$/;
     if (!phoneRegex.test(formData.phoneno)) {
       toast.error("Mobile No. must be 10 digits only.");
       return;
     }
+    const adminForm = new FormData();
+    adminForm.append("fullname", formData.fullname);
+    adminForm.append("email", formData.email);
+    adminForm.append("password", formData.password);
+    adminForm.append("phoneno", formData.phoneno);
+    adminForm.append("status", formData.status);
+    if (formData.profile instanceof File) {
+      adminForm.append("profile", formData.profile);
+    }
 
-    if (editId) {
-      await editAdmin(editId, true);
-      setFormData({ fullname: '', phoneno: '', email: '', password: '', profile: null, status: false });
+    try {
+      if (editId) {
+        await axios.put(
+          `http://localhost:3000/createaccount/${editId}`,
+          adminForm,
+          { headers: { "Content-Type": "multipart/form-data" } }
+        );
+        toast.success("Account updated successfully!");
+      } else {
+        const res = await axios.post(
+          "http://localhost:3000/createaccount",
+          adminForm,
+          { headers: { "Content-Type": "multipart/form-data" } }
+        );
+        toast.success(res.data?.msg || "Account created successfully!");
+      }
+
+      // Reset form
+      setFormData(initialFormState);
+      setImagePreview(null);
       setEditId(null);
       fetchUsers();
-    } else {
-      const adminform = new FormData();
-      adminform.append("fullname", formData.fullname);
-      adminform.append("email", formData.email);
-      adminform.append("password", formData.password);
-      adminform.append("phoneno", formData.phoneno);
-      adminform.append("status", formData.status);
-      adminform.append("profile", formData.profile);
-      // if (formData.profile) {
-      //   adminform.append("profile", formData.profile);
-      // }
-
-      try {
-        const res = await axios.post("http://localhost:3000/createaccount", adminform, {
-          headers: { "Content-Type": "multipart/form-data" }
-        });
-
-        if (res.status === 200 || res.status === 201) {
-          if (res.data.token) {
-            document.cookie = `token=${res.data.token}; path=/;`;
-          }
-          toast.success(res.data.msg || 'Signup successful!');
-          setFormData({ fullname: '', phoneno: '', email: '', password: '', profile: null, status: false });
-          fetchUsers();
-        } else {
-          toast.error("Error: " + (res.data.msg || "Unknown error"));
-        }
-      } catch (error) {
-        console.error("Error submitting form:", error.response?.data || error.message);
-        toast.error( error.response?.data?.msg || "Failed to create account.");
-      }
+    } catch (error) {
+      console.error("Submit failed:", error);
+      toast.error(error.response?.data?.msg || "Action failed.");
     }
   };
 
   // DELETE user
   const deleteAdmin = async (id) => {
-    if (window.confirm("Delete this admin account?")) {
-      const res = await fetch(`http://localhost:3000/createaccount/${id}`, {
-        method: "DELETE",
-      });
-      if (res.ok) {
-        fetchUsers();
-        toast.success("Deleted successfully.");
-      } else {
-        toast.error("Failed to delete admin account.");
-      }
+    if (!window.confirm("Delete this admin account?")) return;
+    try {
+      await axios.delete(`http://localhost:3000/createaccount/${id}`);
+      toast.success("Deleted successfully!");
+      fetchUsers();
+    } catch (err) {
+      toast.error("Failed to delete admin account.");
     }
   };
 
   // EDIT user
-  const editAdmin = async (editId, submit = false) => {
-    if (!submit) {
-      const accountToEdit = userData.find((item) => item._id === editId);
-      if (accountToEdit) {
-        setFormData({
-          fullname: accountToEdit.fullname,
-          email: accountToEdit.email,
-          password: accountToEdit.password,
-          phoneno: accountToEdit.phoneno,
-          profile: null,
-          status: accountToEdit.status === true || accountToEdit.status === "true" || accountToEdit.status === "Active",
-        });
-        setEditId(editId);
-      }
+  const editAdmin = (editId) => {
+    const accountToEdit = userData.find(item => item._id === editId);
+    if (accountToEdit) {
+      setFormData({
+        fullname: accountToEdit.fullname,
+        email: accountToEdit.email,
+        password: accountToEdit.password,
+        phoneno: accountToEdit.phoneno,
+        profile: null,
+        status: accountToEdit.status === true || accountToEdit.status === "true" || accountToEdit.status === "Active",
+      });
+      setEditId(editId);
+      setImagePreview(accountToEdit.profile ? `http://localhost:3000/uploads/${accountToEdit.profile}` : null);
     } else {
-      try {
-        const adminform = new FormData();
-        adminform.append("fullname", formData.fullname);
-        adminform.append("email", formData.email);
-        adminform.append("password", formData.password);
-        adminform.append("phoneno", formData.phoneno);
-        adminform.append("status", formData.status);
-        adminform.append("profile", formData.profile);
-        // if (formData.profile instanceof File) {
-        //   adminform.append("profile", formData.profile);
-        // }
-
-        await axios.put(`http://localhost:3000/createaccount/${editId}`, adminform, {
-          headers: { "Content-Type": "multipart/form-data" },
-        });
-
-        toast.success("Account updated successfully");
-        setEditId(null);
-      } catch (error) {
-        console.error("Update failed", error);
-        toast.error("Failed to update account");
-      }
+      toast.error("Failed to load account for editing.");
     }
   };
 
@@ -165,67 +157,74 @@ export default function CreateAccount() {
         <div className="card shadow border-0 p-4">
           <form onSubmit={handleSubmit}>
             <div className="row">
-              {/* FULL-NAME */}
-              <div className="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12 mb-2">
+              {/* FULL NAME */}
+              <div className="col-md-6 mb-3">
                 <label htmlFor="fullname" className="form-label">Full Name</label>
-                <div className="input-group mb-3">
+                <div className="input-group">
                   <span className="input-group-text"><MdOutlinePersonAddAlt1 size={21} /></span>
-                  <input type="text" className="form-control" id="fullname" name="fullname" value={formData.fullname} onChange={handleChange} placeholder="Enter full name" />
+                  <input type="text" id="fullname" name="fullname" className="form-control"
+                    value={formData.fullname} onChange={handleChange} placeholder="Enter full name" required />
                 </div>
               </div>
 
-              {/* MOBILE NUMBER */}
-              <div className="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12 mb-2">
+              {/* MOBILE */}
+              <div className="col-md-6 mb-3">
                 <label htmlFor="phoneno" className="form-label">Mobile Number</label>
-                <div className="input-group mb-3">
+                <div className="input-group">
                   <span className="input-group-text"><FaMobileAlt size={21} /></span>
-                  <input type="tel" id="phoneno" name="phoneno" value={formData.phoneno} onChange={handleChange} className='form-control' placeholder="Enter mobile number" required />
+                  <input type="tel" id="phoneno" name="phoneno" className="form-control"
+                    value={formData.phoneno} onChange={handleChange} placeholder="Enter mobile number" required />
                 </div>
               </div>
 
-              {/* EMAIL ADDRESS */}
-              <div className="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12 mb-2">
+              {/* EMAIL */}
+              <div className="col-md-6 mb-3">
                 <label htmlFor="email" className="form-label">Email Address</label>
-                <div className="input-group mb-3">
+                <div className="input-group">
                   <span className="input-group-text"><MdOutlineEmail size={21} /></span>
-                  <input type="email" id="email" name="email" value={formData.email} onChange={handleChange} className='form-control' placeholder="Enter email" required />
+                  <input type="email" id="email" name="email" className="form-control"
+                    value={formData.email} onChange={handleChange} placeholder="Enter email" required />
                 </div>
               </div>
 
               {/* PASSWORD */}
-              <div className="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12 mb-2">
+              <div className="col-md-6 mb-3">
                 <label htmlFor="password" className="form-label">Password</label>
-                <div className="input-group mb-3">
+                <div className="input-group">
                   <span className="input-group-text"><FaLockOpen size={21} /></span>
-                  <input type="password" id="password" name="password" value={formData.password} onChange={handleChange} className='form-control' placeholder="Enter password" required />
+                  <input type="password" id="password" name="password" className="form-control"
+                    value={formData.password} onChange={handleChange} placeholder="Enter password" required />
                 </div>
               </div>
 
-              {/* PROFILE - IMAGE */}
-              <div className="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12 mb-2">
+              {/* PROFILE IMAGE */}
+              <div className="col-md-6 mb-3">
                 <label htmlFor="profile" className="form-label">Profile Image</label>
-                <input type="file" id="profile" name="profile" className='form-control' accept="image/*" onChange={handleChange} />
+                <button type="button" className="btn border-0 mx-2" onClick={openCamera}><FaCamera size={40} /></button>
+                <input ref={fileInputRef} type="file" accept="image/*" capture="user" className="d-none" onChange={handleImageChange} />
+                <img src={imagePreview || "../../../noImage.jpeg"} alt="Preview" className="image-preview mb-2" />
               </div>
 
-              {/* STATUS SWITCH */}
-              <div className="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12 mb-4 d-flex align-self-center" >
+              {/* STATUS */}
+              <div className="col-md-6 mb-3 d-flex align-items-center">
                 <label className="switch me-2">
                   <input type="checkbox" id="status" name="status" checked={formData.status} onChange={handleChange} />
                   <span className="slider round"></span>
                 </label>
-                <label htmlFor="status"> {formData.status ? 'Active' : 'Inactive'} </label>
+                <span>{formData.status ? "Active" : "Inactive"}</span>
               </div>
             </div>
 
-            {/* Submit Button */}
-            <div className='text-end mt-4'>
-              <button type="submit" className='btn btn-primary py-2 px-4'>
+            {/* SUBMIT BUTTON */}
+            <div className="text-end mt-4">
+              <button type="submit" className="btn btn-primary py-2 px-4">
                 {editId ? "Update" : "Create Account"}
               </button>
               {editId && (
                 <button type="button" className="btn btn-secondary ms-3" onClick={() => {
                   setFormData(initialFormState);
                   setEditId(null);
+                  setImagePreview(null);
                 }}>Cancel</button>
               )}
             </div>

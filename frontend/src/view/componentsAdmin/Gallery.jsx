@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import TableData from '../TableData';
 import { toast } from 'react-toastify';
 import axios from 'axios';
 
-//ICONS
+// ICONS
 import { MdTitle } from "react-icons/md";
+import { FaCamera } from 'react-icons/fa';
 
 const galleryColumns = [
   { key: 'gallery_title', label: 'Gallery Title' },
@@ -19,28 +20,52 @@ export default function Gallery() {
   const [galleryList, setGalleryList] = useState([]);
   const [editId, setEditId] = useState(null);
 
-  const handleChange = e => setGalleryForm({ ...galleryForm, [e.target.name]: e.target.value });
-  const handleFileChange = e => setGalleryForm({ ...galleryForm, gallery_image: e.target.files[0] });
+  //FOR IMAGE PREVIEW & UPLOAD
+  const fileInputRef = useRef(null);
+  const [imagePreview, setImagePreview] = useState(null);
+  const openCamera = (e) => {
+    e.preventDefault();
+    fileInputRef.current?.click();
+  };
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (!file || !file.type.startsWith("image/")) {
+      toast.error("Please select a valid image file.");
+      return;
+    }
+    setGalleryForm({ ...galleryForm, gallery_image: file });
+    setImagePreview(URL.createObjectURL(file));
+  };
+  
+  const handleChange = (e) =>
+    setGalleryForm({ ...galleryForm, [e.target.name]: e.target.value });
 
-  //GET Gallery
+  // Fetch Gallery List
   const fetchGallery = async () => {
     try {
       const res = await axios.get("http://localhost:3000/gallery");
       setGalleryList(res.data.data || []);
-    } catch {
+    } catch (err) {
       toast.error("Error fetching gallery");
     }
   };
+
   useEffect(() => {
     fetchGallery();
   }, []);
 
-  //POST Gallery
+  // Create / Update Gallery
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!galleryForm.gallery_title) {
+      toast.warning("Gallery title is required");
+      return;
+    }
     const formData = new FormData();
     formData.append("gallery_title", galleryForm.gallery_title);
-    if (galleryForm.gallery_image) formData.append("gallery_image", galleryForm.gallery_image);
+    if (galleryForm.gallery_image) {
+      formData.append("gallery_image", galleryForm.gallery_image);
+    }
 
     try {
       if (editId) {
@@ -51,6 +76,7 @@ export default function Gallery() {
         toast.success("Gallery created Successfully");
       }
       setGalleryForm({ gallery_title: '', gallery_image: null });
+      setImagePreview(null);
       setEditId(null);
       fetchGallery();
     } catch (err) {
@@ -60,15 +86,13 @@ export default function Gallery() {
 
   // DELETE Gallery
   const deleteGallery = async (id) => {
-    if (window.confirm("Delete this gallery item?")) {
-      const res = await fetch(`http://localhost:3000/gallery/${id}`, {
-        method: "DELETE",
-      });
-      if (res.ok) {
+    if (window.confirm("Are you sure you want to delete this gallery item?")) {
+      try {
+        await axios.delete(`http://localhost:3000/gallery/${id}`);
+        toast.success("Deleted successfully");
         fetchGallery();
-        toast.success("Deleted successfully.");
-      } else {
-        toast.error("Failed to delete gallery item.");
+      } catch {
+        toast.error("Failed to delete gallery item");
       }
     }
   };
@@ -78,6 +102,7 @@ export default function Gallery() {
     const item = galleryList.find(i => i._id === id);
     if (item) {
       setGalleryForm({ gallery_title: item.gallery_title, gallery_image: null });
+      setImagePreview(`http://localhost:3000/uploads/gallery/${item.gallery_image}`);
       setEditId(id);
     }
   };
@@ -88,30 +113,38 @@ export default function Gallery() {
         <div className="card p-4 shadow">
           <form onSubmit={handleSubmit}>
             <div className="row">
+              {/* GALLERY TITLE */}
               <div className="col-md-6 mb-3">
-                <label htmlFor="gallery_title" className="form-label">Gallery Title</label>
+                <label htmlFor="gallery_title" className="form-label"> Gallery Title </label>
                 <div className="input-group">
                   <span className="input-group-text"><MdTitle /></span>
                   <input name="gallery_title" placeholder="Enter gallery title" className="form-control" id='gallery_title' value={galleryForm.gallery_title} onChange={handleChange} required /> 
                 </div>
               </div>
+
+              {/* GALLERY IMAGE */}
               <div className="col-md-6 mb-3">
-                <label htmlFor="gallery_image" className="form-label">Gallery Image</label>
-                <input type="file" name="gallery_image" className="form-control" id='gallery_image' onChange={handleFileChange} accept="image/*" required={!editId} />
-                {editId && (
-                  <div className="mt-2">
-                    <span>Current Image :</span>
-                    <img src={`http://localhost:3000/uploads/gallery/${galleryList.find(i => i._id === editId)?.gallery_image}`} alt={`${galleryList.find(i => i._id === editId)?.gallery_image}`} className='w-25 ms-3 mt-3 rounded' />
-                  </div>
-                )}
+                <label htmlFor="gallery_image" className="form-label mb-2">Gallery Image</label>
+                  <button type="button" className="btn border-0 mx-3" onClick={openCamera}> <FaCamera size={40} /> </button>
+                  <input ref={fileInputRef} type="file" accept="image/*" capture="user" className="d-none" onChange={handleImageChange} />
+                  {imagePreview ? (
+                    <img src={imagePreview} alt="Preview" className="image-preview mb-2" />
+                  ) : (
+                    <img src="../../../noImage.jpeg" alt="No preview" className="image-preview mb-2" />
+                  )}
               </div>
             </div>
+
             <div className="text-end">
               <button className="btn btn-primary py-2 px-4" type="submit">
                 {editId ? "Update" : "Add Gallery"}
               </button>
               {editId && (
-                <button type="button" className="btn btn-secondary ms-2" onClick={() => { setEditId(null); setGalleryForm({ gallery_title: '', gallery_image: null }); }}>
+                <button type="button" className="btn btn-secondary ms-2" onClick={() => {
+                  setEditId(null);
+                  setGalleryForm({ gallery_title: '', gallery_image: null });
+                  setImagePreview(null);
+                }}>
                   Cancel
                 </button>
               )}

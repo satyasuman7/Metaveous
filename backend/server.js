@@ -15,6 +15,7 @@ app.use('/uploads', express.static('uploads'));
 
 
 mongoose.connect("mongodb://127.0.0.1:27017/MetaveousTechnology")
+// mongoose.connect("mongodb+srv://satyasuman123123_db_user:6HMGJCghXSZDbPhn@cluster0.6cpgjbf.mongodb.net/MetaveousTechnology?retryWrites=true&w=majority")
 .then(() => console.log("MongoDB Connected"))
 .catch((err) => console.error("MongoDB connection error:", err));
 

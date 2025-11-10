@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { AdminGallery } = require("../schema/adminmodel");
+const AdminGallery = require("../schema/gallerymodel");
 const multer = require("multer");
 const path = require("path");
 const fs = require("fs");

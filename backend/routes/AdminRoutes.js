@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const jwt = require("jsonwebtoken");
-const { AdminAccount } = require("../schema/adminmodel.js");
+const AdminAccount = require("../schema/adminmodel");
 
 // Multer Storage Configuration
 const multer = require("multer");

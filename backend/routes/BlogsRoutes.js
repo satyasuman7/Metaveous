@@ -1,9 +1,10 @@
 const express = require("express");
 const router = express.Router();
-const { AdminBlogs } = require("../schema/adminmodel");
+const AdminBlogs = require("../schema/blogsmodel");
 const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
+
 
 // Upload directory
 const uploadDir = "uploads/blogs/";

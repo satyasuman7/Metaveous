@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { AdminCareer } = require("../schema/adminmodel");
+const AdminCareer = require("../schema/careermodel");
 
 // GET all careers
 router.get("/careers", async (_, res) => {

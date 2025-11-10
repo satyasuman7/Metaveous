@@ -42,7 +42,6 @@ export default function CreateAccount() {
       console.error("Error fetching users:", err.response?.data?.msg || err.message);
     }
   };
-
   useEffect(() => {
     fetchUsers();
   }, []);
@@ -87,18 +86,18 @@ export default function CreateAccount() {
     adminForm.append("password", formData.password);
     adminForm.append("phoneno", formData.phoneno);
     adminForm.append("status", formData.status);
-    if (formData.profile instanceof File) {
+    // if (formData.profile instanceof File) {
       adminForm.append("profile", formData.profile);
-    }
+    // } 
 
     try {
       if (editId) {
-        await axios.put(
+        const res = await axios.put(
           `http://localhost:3000/createaccount/${editId}`,
           adminForm,
           { headers: { "Content-Type": "multipart/form-data" } }
         );
-        toast.success("Account updated successfully!");
+        toast.success(res.data?.msg || "Updated successfully!");
       } else {
         const res = await axios.post(
           "http://localhost:3000/createaccount",
@@ -138,7 +137,8 @@ export default function CreateAccount() {
       setFormData({
         fullname: accountToEdit.fullname,
         email: accountToEdit.email,
-        password: accountToEdit.password,
+        // password: accountToEdit.password,
+        password: "",
         phoneno: accountToEdit.phoneno,
         profile: null,
         status: accountToEdit.status === true || accountToEdit.status === "true" || accountToEdit.status === "Active",
@@ -163,7 +163,7 @@ export default function CreateAccount() {
                 <div className="input-group">
                   <span className="input-group-text"><MdOutlinePersonAddAlt1 size={21} /></span>
                   <input type="text" id="fullname" name="fullname" className="form-control"
-                    value={formData.fullname} onChange={handleChange} placeholder="Enter full name" required />
+                    value={formData.fullname} onChange={handleChange} placeholder="Enter full name" />
                 </div>
               </div>
 
@@ -173,7 +173,7 @@ export default function CreateAccount() {
                 <div className="input-group">
                   <span className="input-group-text"><FaMobileAlt size={21} /></span>
                   <input type="tel" id="phoneno" name="phoneno" className="form-control"
-                    value={formData.phoneno} onChange={handleChange} placeholder="Enter mobile number" required />
+                    value={formData.phoneno} onChange={handleChange} placeholder="Enter mobile number" />
                 </div>
               </div>
 
@@ -183,7 +183,7 @@ export default function CreateAccount() {
                 <div className="input-group">
                   <span className="input-group-text"><MdOutlineEmail size={21} /></span>
                   <input type="email" id="email" name="email" className="form-control"
-                    value={formData.email} onChange={handleChange} placeholder="Enter email" required />
+                    value={formData.email} onChange={handleChange} placeholder="Enter email"/>
                 </div>
               </div>
 
@@ -192,8 +192,8 @@ export default function CreateAccount() {
                 <label htmlFor="password" className="form-label">Password</label>
                 <div className="input-group">
                   <span className="input-group-text"><FaLockOpen size={21} /></span>
-                  <input type="password" id="password" name="password" className="form-control"
-                    value={formData.password} onChange={handleChange} placeholder="Enter password" required />
+                  <input type="text" id="password" name="password" className="form-control"
+                    value={formData.password} onChange={handleChange} placeholder="Enter password" />
                 </div>
               </div>
 

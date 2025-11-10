@@ -114,8 +114,8 @@ router.post("/createaccount", upload.single("profile"), async (req, res) => {
   try {
     const { fullname, email, password, phoneno, status } = req.body;
 
-    if (!fullname || !email || !password || !phoneno || !req.file) {
-      return res.status(400).json({ success: false, msg: "All fields including profile image are required" });
+    if (!fullname || !email || (!editId && !password) || !phoneno || !req.file) {
+      return res.status(400).json({ success: false, msg: "All fields are required" });
     }
 
     const existingByName = await AdminAccount.findOne({ fullname });
@@ -173,24 +173,31 @@ router.delete("/createaccount/:id", async (req, res) => {
 router.put("/createaccount/:id", upload.single("profile"), async (req, res) => {
   try {
     const { fullname, email, password, phoneno, status } = req.body;
-    const updateFields = { fullname, email, password, phoneno, status: status === "true" || status === true };
-    if (password) {
+    const existingAccount = await AdminAccount.findById(req.params.id);
+    if (!existingAccount) return res.status(404).json({ message: "Account not found" });
+
+    const updateFields = { fullname, email, phoneno, status: status === "true" || status === true };
+
+    // Only hash password
+    if (password && password.trim() !== "") {
       const salt = await bcrypt.genSalt(10);
       updateFields.password = await bcrypt.hash(password, salt);
+    } else {
+      // Keep the old hashed password
+      updateFields.password = existingAccount.password;
     }
 
     if (req.file) {
-      // Delete old profile image first
-      const oldAccount = await AdminAccount.findById(req.params.id);
-      if (oldAccount?.profile) deleteFile(oldAccount.profile);
-
+      if (existingAccount.profile) deleteFile(existingAccount.profile);
       updateFields.profile = req.file.filename;
     }
 
-    const updatedAccount = await AdminAccount.findByIdAndUpdate(req.params.id, { $set: updateFields }, { new: true });
-    if (!updatedAccount) return res.status(404).json({ message: "Account not found" });
-
-    res.json(updatedAccount);
+    const updatedAccount = await AdminAccount.findByIdAndUpdate(
+      req.params.id,
+      { $set: updateFields },
+      { new: true }
+    );
+    res.json({ success: true, msg: "Account updated successfully", data: updatedAccount });
   } catch (err) {
     console.error("Update error:", err);
     res.status(500).json({ error: err.message });

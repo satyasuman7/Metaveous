@@ -65,8 +65,8 @@ export default function TableData({ data, columns, title = "Data Table", onEdit,
       </div>
 
       {/* Table */}
-      <div className='table-responsive'>
-        <table className="table table-bordered table-hover table_style">
+      <div className="table-responsive">
+        <table className="table table-bordered table_style">
           <thead className="table-dark">
             <tr>
               <th>#</th>
@@ -89,10 +89,10 @@ export default function TableData({ data, columns, title = "Data Table", onEdit,
                   {columns.map(col => (
                     <td
                       key={col.key}
-                      className={`${col.key === 'blog_content' || col.key === 'description' || col.key === 'job_description' ? 'tableRow_style' : ''} ${col.key === 'blog_title' ? 'tableRow2_style' : ''}`} >
+                      className={`text-center ${col.key === 'blog_content' || col.key === 'description' || col.key === 'job_description' ? 'tableRow_style' : ''} ${col.key === 'blog_title' || col.key === 'password' ? 'tableRow2_style' : ''}`} >
 
                       {col.isImage ? (
-                        <img src={`http://localhost:3000/uploads/${baseImagePath}${item[col.key]}`} alt="profile-img" className='rounded-2' style={{ width: '80px', height: '80px', objectFit: 'cover' }} />
+                        <img src={`http://localhost:3000/uploads/${baseImagePath}${item[col.key]}`} alt="profile-img" className='rounded-2'/>
                       ) : col.key === 'status' ? (
                         <span className={`badge rounded-pill ${item.status ? 'bg-success' : 'bg-danger'}`}>
                           {item.status ? 'Active' : 'Inactive'}

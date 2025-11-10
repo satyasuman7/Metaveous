@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const jwt = require("jsonwebtoken");
 const AdminAccount = require("../schema/adminmodel");
+const bcrypt = require("bcryptjs");
 
 // Multer Storage Configuration
 const multer = require("multer");
@@ -70,9 +71,16 @@ router.post("/signin", async (req, res) => {
 
     const user = await AdminAccount.findOne({ email });
 
-    if (!user || user.password !== password) {
+    // if (!user || user.password !== password) {
+    if (!user) {
       return res.status(401).json({ success: false, msg: "Invalid credentials" });
     }
+    // Compare entered password with hashed password
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(401).json({ success: false, msg: "Invalid credentials" });
+    }
+
     if (user.status === false) {
       return res.status(403).json({ success: false, msg: "Account is Inactive. Contact admin." });
     }
@@ -126,7 +134,9 @@ router.post("/createaccount", upload.single("profile"), async (req, res) => {
       return res.status(400).json({ msg: "Email is already registered" });
     }
 
-    const newAdmin = new AdminAccount({ fullname, email, password, phoneno, profile: req.file.filename, status: status === "true" });
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+    const newAdmin = new AdminAccount({ fullname, email, password: hashedPassword, phoneno, profile: req.file.filename, status: status === "true" });
 
     await newAdmin.save();
 
@@ -164,6 +174,10 @@ router.put("/createaccount/:id", upload.single("profile"), async (req, res) => {
   try {
     const { fullname, email, password, phoneno, status } = req.body;
     const updateFields = { fullname, email, password, phoneno, status: status === "true" || status === true };
+    if (password) {
+      const salt = await bcrypt.genSalt(10);
+      updateFields.password = await bcrypt.hash(password, salt);
+    }
 
     if (req.file) {
       // Delete old profile image first

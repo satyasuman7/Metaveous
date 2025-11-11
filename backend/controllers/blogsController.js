@@ -77,10 +77,10 @@ exports.updateBlog = async (req, res) => {
       update.blog_image = req.file.filename;
     }
 
-    const updated = await AdminBlogs.findByIdAndUpdate(req.params.id, update, { new: true });
-    if (!updated) return res.status(404).json({ msg: "Blog not found" });
+    const updatedBlogs = await AdminBlogs.findByIdAndUpdate(req.params.id, update, { new: true });
+    if (!updatedBlogs) return res.status(404).json({ msg: "Blog not found" });
 
-    res.json({ success: true, data: updated });
+    res.json({ success: true, data: updatedBlogs });
   } catch {
     res.status(500).json({ msg: "Update failed" });
   }

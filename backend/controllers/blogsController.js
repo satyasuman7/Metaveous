@@ -1,8 +1,6 @@
-const jwt = require("jsonwebtoken");
-const bcrypt = require("bcryptjs");
+const AdminBlogs = require("../schema/blogsmodel.js");
 const path = require("path");
 const fs = require("fs");
-const AdminBlogs = require("../schema/blogsmodel.js");
 const uploadDir = "uploads/blogs/";
 
 // delete file from folder

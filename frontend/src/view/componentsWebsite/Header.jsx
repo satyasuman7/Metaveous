@@ -1,11 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import DarkLightMode from "./DarkLightMode";
+import { DarkLightMode, useTheme } from "./DarkLightMode";
 import './websitestyle.css';
+import { CiMenuBurger } from "react-icons/ci";
+import { RxCross1 } from "react-icons/rx";
 
 const Header = () => {
+  const { darkMode, toggleDarkMode } = useTheme();
   const [sticky, setSticky] = useState(false);
   const location = useLocation();
+  const [isOpen, setIsOpen] = useState(false);
+  const handleToggle = () => setIsOpen(!isOpen);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -18,7 +23,8 @@ const Header = () => {
   const menuData = [
     { title: "Home", path: "/" },
     { title: "About", path: "/about" },
-    { title: "Services", path: "/services",
+    {
+      title: "Services", path: "/services",
       // submenu: [
       //   { title: "Web Development", path: "/services/web" },
       //   { title: "Mobile Apps", path: "/services/mobile" },
@@ -32,25 +38,30 @@ const Header = () => {
   ];
 
   return (
-    <header className='w-100 top-0 start-0 z-3 '>
+    <header className="position-sticky w-100  shadow" data-bs-theme={darkMode ? 'dark' : 'light'}>
       <nav className="navbar navbar-expand-lg">
         <div className="container">
           {/* Logo */}
-          <Link className="navbar-brand" to="/">
-            <img src="/images/logo/logo-2.svg" alt="logo" width="140" height="30" />
+          <Link className="navbar-brand w-75" to="/">
+            <img src="./Metaveos Consultancy pvt. ltd.png" className="company-logo" alt="company_logo" />
           </Link>
 
           {/* Mobile Toggle */}
           {/* <DarkLightMode /> */}
-          <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMenu" aria-controls="navbarMenu" aria-expanded="false" aria-label="Toggle navigation">
-            <span className="navbar-toggler-icon"></span>
+          <button className="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMenu" aria-controls="navbarMenu" aria-expanded={isOpen ? "true" : "false"} aria-label="Toggle navigation" onClick={handleToggle}>
+            {/* When open → show X, else → show default icon */}
+            {isOpen ? (
+              <RxCross1 size={21} />
+            ) : (
+              <CiMenuBurger size={21} />
+            )}
           </button>
 
           {/* Navbar Links */}
           <div className="collapse navbar-collapse" id="navbarMenu">
             <ul className="navbar-nav ms-auto">
-               {/* SUBMENU EXAMPLE */}
-              {menuData.map((menuItem, index) =>(
+              {/* SUBMENU EXAMPLE */}
+              {menuData.map((menuItem, index) => (
                 // menuItem.submenu ? (
                 //   <li className="nav-item dropdown" key={index}>
                 //     <Link className="nav-link dropdown-toggle" to="#" id={`dropdown-${index}`} role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -67,17 +78,17 @@ const Header = () => {
                 //     </ul>
                 //   </li>
                 // ) : (
-                  <li className="nav-item me-4 py-3" key={index}>
-                    <Link className={`nav-link ${ location.pathname === menuItem.path ? "text-primary fw-bold" : ""}`} to={menuItem.path}>
-                      {menuItem.title}
-                    </Link>
-                  </li>
-                )
+                <li className="nav-item me-4 py-3" key={index}>
+                  <Link className={`nav-link ${location.pathname === menuItem.path ? "text-primary fw-bold active" : ""}`} to={menuItem.path}>
+                    {menuItem.title}
+                  </Link>
+                </li>
+              )
               )}
 
               {/* Auth Buttons + Theme */}
               <li className="nav-item d-flex align-items-center ms-lg-3">
-                <Link className="btn btn-primary text-decoration-none me-2" to="/adminsignin">
+                <Link className="btn btn-primary text-decoration-none me-3" to="/adminsignin">
                   Sign In
                 </Link>
                 <DarkLightMode />

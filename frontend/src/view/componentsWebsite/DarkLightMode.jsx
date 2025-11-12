@@ -1,37 +1,40 @@
-import React, { useState } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
 import { FaRegSun, FaRegMoon } from "react-icons/fa6";
 
-const DarkLightMode = () => {
-  const [darkMode, setDarkMode] = useState(false);
+const ThemeContext = createContext();
 
-  // Load saved theme from localStorage
-  // useEffect(() => {
-  //   const savedTheme = localStorage.getItem("theme");
-  //   if (savedTheme === "dark") {
-  //     setDarkMode(true);
-  //     document.body.classList.add("bg-dark", "text-light");
-  //   }
-  // }, []);
+export const DarkLightModeProvider = ({ children }) => {
+  const [darkMode, setDarkMode] = useState(() => {
+    // Load from localStorage on mount
+    return localStorage.getItem("theme") === "dark";
+  });
 
-  // Toggle and save theme
-  const toggleTheme = () => {
-    const newMode = !darkMode;
-    setDarkMode(newMode);
+  useEffect(() => {
+    document.body.classList.toggle("dark-mode", darkMode);
+    localStorage.setItem("theme", darkMode ? "dark" : "light");
+  }, [darkMode]);
 
-    if (newMode) {
-      document.body.classList.add("bg-dark", "text-light");
-      localStorage.setItem("theme", "dark");
-    } else {
-      document.body.classList.remove("bg-dark", "text-light");
-      localStorage.setItem("theme", "light");
-    }
-  };
+  const toggleDarkMode = () => setDarkMode((prev) => !prev);
 
   return (
-    <span className={`${darkMode ? "text-white" : "text-dark"} ms-2`} onClick={toggleTheme}>
+    <ThemeContext.Provider value={{ darkMode, toggleDarkMode }}>
+      {children}
+    </ThemeContext.Provider>
+  );
+};
+
+// Hook for using theme anywhere
+export function useTheme() {
+  return useContext(ThemeContext);
+}
+
+// This component is your clickable toggle icon
+export const DarkLightMode = () => {
+  const { darkMode, toggleDarkMode } = useTheme();
+
+  return (
+    <span className="d-flex align-items-center justify-content-center" role="button" onClick={toggleDarkMode} title={darkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}>
       {darkMode ? <FaRegSun size={21} /> : <FaRegMoon size={21} />}
     </span>
   );
 };
-
-export default DarkLightMode;

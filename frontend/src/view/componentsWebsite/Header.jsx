@@ -1,36 +1,32 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { DarkLightMode, useTheme } from "./DarkLightMode";
-import './websitestyle.css';
 import { CiMenuBurger } from "react-icons/ci";
 import { RxCross1 } from "react-icons/rx";
 
 const Header = () => {
-  const { darkMode, toggleDarkMode } = useTheme();
-  const [sticky, setSticky] = useState(false);
+  const { darkMode } = useTheme();
   const location = useLocation();
-  const [isOpen, setIsOpen] = useState(false);
-  const handleToggle = () => setIsOpen(!isOpen);
 
+  const [sticky, setSticky] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+
+  // Sticky header
   useEffect(() => {
-    const handleScroll = () => {
-      setSticky(window.scrollY > 50);
-    };
+    const handleScroll = () => setSticky(window.scrollY > 50);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // Close menu after click
+  const closeMenu = () => setIsOpen(false);
+
+  const handleToggle = () => setIsOpen(!isOpen);
+
   const menuData = [
     { title: "Home", path: "/" },
     { title: "About", path: "/about" },
-    {
-      title: "Services", path: "/services",
-      // submenu: [
-      //   { title: "Web Development", path: "/services/web" },
-      //   { title: "Mobile Apps", path: "/services/mobile" },
-      //   { title: "UI/UX Design", path: "/services/uiux" },
-      // ],
-    },
+    { title: "Services", path: "/services" },
     { title: "Blogs", path: "/blogs" },
     { title: "Careers", path: "/careers" },
     { title: "Gallery", path: "/gallery" },
@@ -38,58 +34,35 @@ const Header = () => {
   ];
 
   return (
-    <header className="position-sticky w-100  shadow" data-bs-theme={darkMode ? 'dark' : 'light'}>
+    <header className={`navbar_style w-100 py-2 shadow ${sticky ? "sticky-top navbar-blur" : ""}`} data-bs-theme={darkMode ? "dark" : "light"}>
       <nav className="navbar navbar-expand-lg">
         <div className="container">
+
           {/* Logo */}
-          <Link className="navbar-brand w-75" to="/">
+          <Link className="navbar-brand w-75" to="/" onClick={closeMenu}>
             <img src="./Metaveos Consultancy pvt. ltd.png" className="company-logo" alt="company_logo" />
           </Link>
 
           {/* Mobile Toggle */}
-          {/* <DarkLightMode /> */}
-          <button className="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMenu" aria-controls="navbarMenu" aria-expanded={isOpen ? "true" : "false"} aria-label="Toggle navigation" onClick={handleToggle}>
-            {/* When open → show X, else → show default icon */}
-            {isOpen ? (
-              <RxCross1 size={21} />
-            ) : (
-              <CiMenuBurger size={21} />
-            )}
+          <button className="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMenu" aria-expanded={isOpen ? "true" : "false"} onClick={handleToggle}>
+            {isOpen ? <RxCross1 size={22} /> : <CiMenuBurger size={22} />}
           </button>
 
           {/* Navbar Links */}
-          <div className="collapse navbar-collapse" id="navbarMenu">
+          <div className={`collapse navbar-collapse ${isOpen ? "show" : ""}`} id="navbarMenu">
             <ul className="navbar-nav ms-auto">
-              {/* SUBMENU EXAMPLE */}
-              {menuData.map((menuItem, index) => (
-                // menuItem.submenu ? (
-                //   <li className="nav-item dropdown" key={index}>
-                //     <Link className="nav-link dropdown-toggle" to="#" id={`dropdown-${index}`} role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                //       {menuItem.title}
-                //     </Link>
-                //     <ul className="dropdown-menu" aria-labelledby={`dropdown-${index}`}>
-                //       {menuItem.submenu.map((subItem, i) => (
-                //         <li key={i}>
-                //           <Link className="dropdown-item" to={subItem.path} style={{ color: location.pathname === subItem.path ? "#0d6efd" : "inherit", }}>
-                //             {subItem.title}
-                //           </Link>
-                //         </li>
-                //       ))}
-                //     </ul>
-                //   </li>
-                // ) : (
-                <li className="nav-item me-4 py-3" key={index}>
-                  <Link className={`nav-link ${location.pathname === menuItem.path ? "text-primary fw-bold active" : ""}`} to={menuItem.path}>
-                    {menuItem.title}
+              {menuData.map((menu, index) => (
+                <li className="nav-item me-4" key={index}>
+                  <Link className={`nav-link ${ location.pathname === menu.path ? "text-primary fw-bold active" : "" }`} to={menu.path} onClick={closeMenu}>
+                    {menu.title}
                   </Link>
                 </li>
-              )
-              )}
+              ))}
 
-              {/* Auth Buttons + Theme */}
+              {/* Auth + Theme */}
               <li className="nav-item d-flex align-items-center ms-lg-3">
-                <Link className="btn btn-primary text-decoration-none me-3" to="/adminsignin">
-                  Sign In
+                <Link className="btn btn-primary text-decoration-none me-3 py-2 px-4" to="/adminsignin" onClick={closeMenu}>
+                  Login
                 </Link>
                 <DarkLightMode />
               </li>

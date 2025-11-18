@@ -1,10 +1,12 @@
 import React from "react";
 import { FaFacebookF, FaXTwitter, FaYoutube, FaLinkedinIn } from "react-icons/fa6";
 import { Link } from "react-router-dom";
+import { useTheme } from "./DarkLightMode";
 
 const Footer = () => {
+  const { darkMode, toggleDarkMode } = useTheme();
   return (
-    <footer className="bg-white border-top py-5 position-relative">
+    <footer className="py-5 position-relative footer_style shadow-lg" data-bs-theme={darkMode ? 'dark' : 'light'}>
       <div className="container">
         <div className="row gy-4">
           <div className="col-md-4">

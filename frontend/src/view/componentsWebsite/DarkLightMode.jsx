@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect } from "react";
-import { FaRegSun, FaRegMoon } from "react-icons/fa6";
+import { PiSunDuotone, PiMoonDuotone  } from "react-icons/pi";
 
 const ThemeContext = createContext();
 
@@ -34,7 +34,7 @@ export const DarkLightMode = () => {
 
   return (
     <span className="d-flex align-items-center justify-content-center" role="button" onClick={toggleDarkMode} title={darkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}>
-      {darkMode ? <FaRegSun size={21} /> : <FaRegMoon size={21} />}
+      {darkMode ? <PiSunDuotone size={25} /> : <PiMoonDuotone size={25} />}
     </span>
   );
 };

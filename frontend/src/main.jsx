@@ -31,7 +31,15 @@ import Blogsw from './view/componentsWebsite/Pages/Blogs.jsx';
 import Careersw from './view/componentsWebsite/Pages/Careers.jsx';
 import Galleryw from './view/componentsWebsite/Pages/Gallery.jsx';
 
-// WEBSITE PAGES
+const menuData = [
+  { label: "Home", path: "/" },
+  { label: "About", path: "/about" },
+  { label: "Services", path: "/services" },
+  { label: "Blogs", path: "/blogs" },
+  { label: "Careers", path: "/careers" },
+  { label: "Gallery", path: "/gallery" },
+  { title: "Contact", path: "/contact" },
+];
 
 createRoot(document.getElementById('root')).render(
   <BrowserRouter>
@@ -49,7 +57,7 @@ createRoot(document.getElementById('root')).render(
         </Route>
 
         {/* WEBSITE PANEL */}
-        <Route path='/' element={<Common />}>
+        <Route path='/' element={<Common menu={menuData} />}>
           <Route index element={<Home />} />
           <Route path='/about' element={<About />} />
           <Route path='/services' element={<Services />} />

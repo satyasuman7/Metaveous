@@ -77,7 +77,7 @@ const Footer = () => {
 
           <hr className="mt-5" />
           <div className="text-center text-secondary small">
-            © {new Date().getFullYear()} Metaveos Technology — All Rights Reserved.
+            © {new Date().getFullYear()} Metaveous Technologies Pvt Ltd — All Rights Reserved.
           </div>
         </div>
 

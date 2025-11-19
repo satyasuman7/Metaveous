@@ -13,7 +13,7 @@ export default function Home() {
             <Col lg={10}>
               <h1 className="fw-bold display-5 mb-4"> Empowering Businesses With Innovative IT Solutions </h1>
 
-              <p className="text-secondary fs-5 mb-5"> METAVEOS TECHNOLOGY is a leading IT services company delivering scalable, secure, and high-performance digital solutions. We provide end-to-end services—including software development, web applications, mobile apps, cloud integration, and UI/UX—designed to help startups and enterprises accelerate growth using modern technologies. </p>
+              <p className="text-secondary fs-5 mb-5"> METAVEOS TECHNOLOGIES PVT LTD is a leading IT services company delivering scalable, secure, and high-performance digital solutions. We provide end-to-end services—including software development, web applications, mobile apps, cloud integration, and UI/UX—designed to help startups and enterprises accelerate growth using modern technologies. </p>
 
               <div className="d-flex flex-column flex-sm-row justify-content-center gap-3">
                 <Link to="#" className="btn btn-primary px-4 py-3 fw-semibold">

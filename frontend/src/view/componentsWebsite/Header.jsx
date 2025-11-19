@@ -29,7 +29,7 @@ const Header = () => {
     { label: "Blogs", path: "/blogs" },
     { label: "Careers", path: "/careers" },
     { label: "Gallery", path: "/gallery" },
-    { title: "Contact", path: "/contact" },
+    { label: "Contact", path: "/contact" },
   ];
 
   return (

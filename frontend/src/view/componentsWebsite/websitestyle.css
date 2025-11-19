@@ -1,4 +1,4 @@
-/*------------ DARK-LIGHT-MODE SECTION ------------*/
+/*------------ DARK-LIGHT-MODE SECTION STARTS ------------*/
 .dark-mode {
   background-color: #121212;
   color: #f1f1f1;
@@ -8,7 +8,7 @@
   background-color: #1e232e !important;
 }
 
-/* navbar blur effect starts */
+
 .navbar-blur {
   backdrop-filter: blur(5px);
   -webkit-backdrop-filter: blur(5px);
@@ -19,7 +19,6 @@
 [data-bs-theme="dark"] .navbar-blur {
   background-color: rgba(0, 0, 0, 0.35);
 }
-/* navbar blur effect ends */
 
 
 .dark-mode a {
@@ -43,8 +42,9 @@
   border-color: #f8f9fa;
   color: #f8f9fa;
 }
+/*------------ DARK-LIGHT-MODE SECTION ENDS ------------*/
 
-/* BREAD-CRUMB CARD SECTION */
+/*------------ BREAD-CRUMB CARD SECTION STARTS ------------ */
 .breadcrumb_card {
   background: linear-gradient(to bottom, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.3)), url("./technology-background_1302-15072.jpg");
   background-position: center;
@@ -56,8 +56,9 @@
 .breadcrumb_card h1{
   text-transform: uppercase;
 }
+/*------------ BREAD-CRUMB CARD SECTION ENDS ------------ */
 
-/* ------------ HEADER SECTION ------------ */
+/*------------ HEADER SECTION STARTS ------------ */
 .company-logo {
   width: 13%;
 }
@@ -87,9 +88,10 @@
     padding-bottom: 200px !important;
   }
 }
+/*------------ HEADER SECTION ENDS ------------ */
 
 
-/* ------------ FOOTER SECTION ------------ */
+/*------------ FOOTER SECTION STARTS ------------ */
 .hover-link:hover {
   color: #4f46e5;
 }
@@ -97,3 +99,37 @@
   color: #4f46e5 !important;
   cursor: pointer;
 }
+/*------------ FOOTER SECTION ENDS ------------ */
+
+/*------------ ABOUT SECTION STARTS ------------ */
+.about-details__content-text1 {
+   position: relative;
+   display: block;
+   /* margin-top: 26px; */
+}
+
+.sec-title__tagline {
+    position: relative;
+    display: flex;
+    align-items: center;
+    /* margin-bottom: 16px; */
+}
+  .sec-title__tagline .left-line {
+    position: relative;
+    display: block;
+    width: 65px;
+    height: 3px;
+    background: #0d6efd;
+    margin-right: 11px;
+  }
+    .sec-title__tagline .left-line::before {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%) rotate(45deg);
+      right: 0px;
+      width: 10px;
+      height: 10px;
+      background: #0d6efd;
+      content: "";
+    }
+/*------------ ABOUT SECTION ENDS ------------ */

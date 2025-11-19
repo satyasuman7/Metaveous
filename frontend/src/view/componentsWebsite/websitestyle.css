@@ -77,7 +77,7 @@
 .hero-svg-bottom {
   position: absolute;
   bottom: 0;
-  left: 0;
+  left: -47px;
   z-index: -1;
 }
 

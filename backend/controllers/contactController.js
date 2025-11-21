@@ -14,15 +14,11 @@ exports.getAllContacts = async (req, res) => {
 exports.createContact = async (req, res) => {
   try {
     const { contact_name, contact_phone, contact_email, contact_message } = req.body;
-
     if (!contact_name || !contact_phone || !contact_email || !contact_message) {
       return res.status(400).json({ success: false, msg: "All fields are required." });
     }
-
     const newContact = await AdminContact.create({ contact_name, contact_phone, contact_email, contact_message });
-
     res.status(201).json({ success: true, data: newContact });
-
   } catch (error) {
     console.error("Error creating contact:", error);
     res.status(500).json({ success: false, msg: "Error submitting contact" });

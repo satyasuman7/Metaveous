@@ -28,14 +28,18 @@ exports.createContact = async (req, res) => {
 // PUT contact
 exports.updateContact = async (req, res) => {
   try {
-    const { contact_name, contact_phone, contact_email, contact_message } = req.body;
-    const update = { contact_name, contact_phone, contact_email, contact_message };
+    const { contact_name, contact_phone, contact_email, contact_message, status } = req.body;
+    console.log("BODY RECEIVED:", req.body);
+    const update = { contact_name, contact_phone, contact_email, contact_message, status  };
+    const updated = await AdminContact.findByIdAndUpdate(
+      req.params.id, update, { new: true }
+    );
 
-    const updated = await AdminContact.findByIdAndUpdate(req.params.id, update, { new: true });
-    if (!updated) return res.status(404).json({ msg: "Contacts not found" });
-
+    if (!updated) {
+      return res.status(404).json({ msg: "Contact not found" });
+    }
     res.json({ success: true, data: updated });
-  } catch {
-    res.status(500).json({ msg: "Update failed" });
+  } catch (err) {
+    res.status(500).json({ msg: "Update failed", error: err.message });
   }
 };

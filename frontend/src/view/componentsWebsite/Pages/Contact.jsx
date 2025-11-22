@@ -35,7 +35,7 @@ export default function Contact() {
     try {
       const res = await axios.post(
         "http://localhost:3000/contacts",
-        formData, // send JSON (NOT FormData)
+        formData,
         { headers: { "Content-Type": "application/json" } }
       );
       toast.success(res.data?.msg || "Message sent successfully!");
